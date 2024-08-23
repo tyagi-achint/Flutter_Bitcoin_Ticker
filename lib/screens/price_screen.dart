@@ -34,7 +34,7 @@ class _PriceScreenState extends State<PriceScreen> {
         _isWaiting = false;
       });
     } catch (e) {
-      // Handle errors like network issues
+    
       print('Error fetching exchange rates: $e');
       setState(() {
         _isWaiting = false;
