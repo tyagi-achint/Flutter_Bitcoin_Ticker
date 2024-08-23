@@ -1,9 +1,9 @@
 import 'dart:io';
-import 'package:bitcoin_ticker/crypto_card.dart';
+import 'package:bitcoin_ticker/services/crypto_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'coin_data.dart';
-import 'get_exchangeRate.dart';
+import '../utilities/coin_data.dart';
+import '../services/get_exchangeRate.dart';
 
 class PriceScreen extends StatefulWidget {
   @override
