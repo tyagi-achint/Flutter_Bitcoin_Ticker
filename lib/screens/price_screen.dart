@@ -12,9 +12,8 @@ class PriceScreen extends StatefulWidget {
 
 class _PriceScreenState extends State<PriceScreen> {
   String _currencyValue = 'USD';
-  double _btcRate = 0.0;
-  double _ethRate = 0.0;
-  double _ltcRate = 0.0;
+  Map<String, String> _rates = {};
+  bool _isWaiting = true;
 
   @override
   void initState() {
@@ -23,15 +22,24 @@ class _PriceScreenState extends State<PriceScreen> {
   }
 
   void updateRate() async {
-    double btcRate = await getExchangeRate('BTC', _currencyValue);
-    double ethRate = await getExchangeRate('ETH', _currencyValue);
-    double ltcRate = await getExchangeRate('LTC', _currencyValue);
-
     setState(() {
-      _btcRate = btcRate;
-      _ethRate = ethRate;
-      _ltcRate = ltcRate;
+      _isWaiting = true;
     });
+
+    try {
+      Map<String, String> _currentRates = await getExchangeRate(_currencyValue);
+
+      setState(() {
+        _rates = _currentRates;
+        _isWaiting = false;
+      });
+    } catch (e) {
+      // Handle errors like network issues
+      print('Error fetching exchange rates: $e');
+      setState(() {
+        _isWaiting = false;
+      });
+    }
   }
 
   DropdownButton<String> androidDropdownButton() {
@@ -68,11 +76,7 @@ class _PriceScreenState extends State<PriceScreen> {
         );
       },
       children: [
-        for (String currency in currenciesList)
-          DropdownMenuItem<String>(
-            child: Center(child: Text(currency)),
-            value: currency,
-          ),
+        for (String currency in currenciesList) Center(child: Text(currency)),
       ],
     );
   }
@@ -91,15 +95,16 @@ class _PriceScreenState extends State<PriceScreen> {
             padding: EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
             child: Column(
               children: [
-                cryptoCart('BTC', _currencyValue, _btcRate),
+                for (String crypto in cryptoList)
+                  cryptoCart(
+                    crypto,
+                    _currencyValue,
+                    _isWaiting ? '?' : _rates[crypto]!,
+                    _isWaiting,
+                  ),
                 SizedBox(
                   height: 10,
                 ),
-                cryptoCart('ETH', _currencyValue, _ethRate),
-                SizedBox(
-                  height: 10,
-                ),
-                cryptoCart('LTC', _currencyValue, _ltcRate),
               ],
             ),
           ),

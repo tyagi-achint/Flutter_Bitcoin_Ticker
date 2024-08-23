@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Widget cryptoCart(String name, String currency, double rate) {
+Widget cryptoCart(String name, String currency, String rate, bool isWaiting) {
   return Container(
     width: double.infinity,
     child: Card(
@@ -12,7 +12,7 @@ Widget cryptoCart(String name, String currency, double rate) {
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 28.0),
         child: Text(
-          '1 $name =  $rate $currency ',
+          '1 $name = ${isWaiting ? '?' : rate} $currency ',
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 20.0,
